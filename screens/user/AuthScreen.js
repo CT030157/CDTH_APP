@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
-import * as authActions from '../../store/actions/auth';
+// import * as authActions from '../../store/actions/auth';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -66,27 +66,27 @@ const AuthScreen = () => {
    }, [error])
 
    const authHandler = async () => {
-      let action;
-      if (isSignup) {
-         action =
-            authActions.signup(
-               formState.inputValues.email,
-               formState.inputValues.password
-            )
-      } else {
-         action = authActions.login(
-            formState.inputValues.email,
-            formState.inputValues.password
-         )
-      }
-      setError(null);
-      setIsLoading(true);
-      try {
-         await dispatch(action);
-      } catch (err) {
-         setError(err.message);
-         setIsLoading(false);
-      }
+      // let action;
+      // if (isSignup) {
+      //    action =
+      //       authActions.signup(
+      //          formState.inputValues.email,
+      //          formState.inputValues.password
+      //       )
+      // } else {
+      //    action = authActions.login(
+      //       formState.inputValues.email,
+      //       formState.inputValues.password
+      //    )
+      // }
+      // setError(null);
+      // setIsLoading(true);
+      // try {
+      //    await dispatch(action);
+      // } catch (err) {
+      //    setError(err.message);
+      //    setIsLoading(false);
+      // }
    }
 
    const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {

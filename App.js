@@ -5,7 +5,7 @@ import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import ReduxThunk from 'redux-thunk';
 
-import productReducer from './store/reducers/products';
+// import productReducer from './store/reducers/products';
 import userReducer from './store/reducers/user';
 import AppNavigator from './navigation/AppNavigator';
 
@@ -17,7 +17,7 @@ const fetchFonts = () => {
 };
 
 const rootReducer = combineReducers({
-  products: productReducer,
+  // products: productReducer,
   user: userReducer
 });
 
