@@ -8,33 +8,33 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 
 import Colors from '../constants/Colors';
-// import * as authActions from '../store/actions/auth';
+import * as userActions from '../store/actions/user_actions'
 
 const StartupScreen = () => {
    const dispatch = useDispatch();
-   // useEffect(() => {
-   //    const tryLogin = async () => {
-   //       const userData = await AsyncStorage.getItem('userData');
-   //       if (!userData) {
-   //          dispatch(authActions.setDidTryAL());
-   //          return;
-   //       }
-   //       const transformedData = JSON.parse(userData);
-   //       const { token, userId, expiryDate } = transformedData;
-   //       const expirationDate = new Date(expiryDate);
+   useEffect(() => {
+      const tryLogin = async () => {
+         const userData = await AsyncStorage.getItem('userData');
+         if (!userData) {
+            dispatch(userActions.setDidTryAL());
+            return;
+         }
+         const transformedData = JSON.parse(userData);
+         const { token, userId, tokenExp } = transformedData;
+         const expirationDate = new Date(tokenExp);
 
-   //       if (expirationDate <= new Date() || !token || !userId) {
-   //          dispatch(authActions.setDidTryAL());
-   //          return;
-   //       }
+         if (expirationDate <= new Date() || !token || !userId) {
+            dispatch(userActions.setDidTryAL());
+            return;
+         }
 
-   //       const expirationTime = expirationDate.getTime() - new Date().getTime();
+         const expirationTime = expirationDate.getTime() - new Date().getTime();
 
-   //       dispatch(authActions.authenticate(userId, token, expirationTime));
-   //    };
+         // dispatch(userActions.authenticate(userId, token, expirationTime));
+      };
 
-   //    tryLogin()
-   // }, [dispatch]);
+      tryLogin()
+   }, [dispatch]);
 
    return (
       <View style={styles.screen}>

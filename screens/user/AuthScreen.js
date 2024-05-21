@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
-// import * as authActions from '../../store/actions/auth';
+import * as userActions from '../../store/actions/user_actions';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -66,27 +66,30 @@ const AuthScreen = () => {
    }, [error])
 
    const authHandler = async () => {
-      // let action;
-      // if (isSignup) {
-      //    action =
-      //       authActions.signup(
-      //          formState.inputValues.email,
-      //          formState.inputValues.password
-      //       )
-      // } else {
-      //    action = authActions.login(
-      //       formState.inputValues.email,
-      //       formState.inputValues.password
-      //    )
-      // }
-      // setError(null);
-      // setIsLoading(true);
-      // try {
-      //    await dispatch(action);
-      // } catch (err) {
-      //    setError(err.message);
-      //    setIsLoading(false);
-      // }
+      let action;
+      if (isSignup) {
+         action = userActions.loginUser(
+            {
+               email: formState.inputValues.email,
+               password: formState.inputValues.password
+            }
+         )
+      } else {
+         action = userActions.loginUser(
+            {
+               email: formState.inputValues.email,
+               password: formState.inputValues.password
+            }
+         )
+      }
+      setError(null);
+      setIsLoading(true);
+      try {
+         await dispatch(action);
+      } catch (err) {
+         setError(err.message);
+         setIsLoading(false);
+      }
    }
 
    const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
@@ -114,19 +117,19 @@ const AuthScreen = () => {
                      required
                      email
                      autoCapitalize='none'
-                     errorText='Please enter a valid email address.'
+                     errorText='Xin vui lòng nhập email.'
                      onInputChange={inputChangeHandler}
                      initialValue=''
                   />
                   <Input
                      id='password'
-                     label='Password'
+                     label='Mật khẩu'
                      keyboardType='default'
                      secureTextEntry
                      required
                      minLength={5}
                      autoCapitalize='none'
-                     errorText='Please enter a valid password.'
+                     errorText='Xin vui lòng nhập mật khẩu.'
                      onInputChange={inputChangeHandler}
                      initialValue=''
                   />
@@ -138,21 +141,21 @@ const AuthScreen = () => {
                         />
                      ) : (
                            <Button
-                              title={isSignup ? 'Sign Up' : 'Login'}
+                              title={isSignup ? 'Đăng kí' : 'Đăng nhập'}
                               color={Colors.primary}
                               onPress={authHandler}
                            />
                         )}
                   </View>
-                  <View style={styles.buttonContainer}>
+                  {/* <View style={styles.buttonContainer}>
                      <Button
-                        title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`}
+                        title={`Switch to ${isSignup ? 'Đăng nhập' : 'Đăng kí'}`}
                         color={Colors.accent}
                         onPress={() => {
                            setIsSignup(prevState => !prevState);
                         }}
                      />
-                  </View>
+                  </View> */}
                </ScrollView>
             </Card>
          </LinearGradient>
@@ -162,7 +165,7 @@ const AuthScreen = () => {
 };
 
 export const screenOptions = {
-   headerTitle: 'Authenticate'
+   headerTitle: 'Đăng nhập'
 }
 
 const styles = StyleSheet.create({
