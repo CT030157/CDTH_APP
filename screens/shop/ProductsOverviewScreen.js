@@ -53,12 +53,12 @@ const ProductsOverviewScreen = props => {
       });
    }, [dispatch, loadProducts]);
 
-   // const selectItemHandler = (id, title) => {
-   //    props.navigation.navigate('ProductDetail', {
-   //       productId: id,
-   //       productTitle: title
-   //    });
-   // };
+   const selectItemHandler = (id, title) => {
+      props.navigation.navigate('ProductDetail', {
+         productId: id,
+         productTitle: title
+      });
+   };
 
    if (error) {
       return (
@@ -97,8 +97,8 @@ const ProductsOverviewScreen = props => {
                title={itemData.item.title}
                price={itemData.item.price}
                onSelect={() => {
-                  // selectItemHandler(itemData.item.id, itemData.item.title)
-                  console.log(itemData)
+                  selectItemHandler(itemData.item._id, itemData.item.title)
+                  // console.log(itemData)
                }}
             >
                {/* <Button

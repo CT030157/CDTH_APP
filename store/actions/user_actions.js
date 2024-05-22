@@ -20,15 +20,21 @@ export const setDidTryAL = () => {
     return { type: SET_DID_TRY_AL };
  }
 
-// export function registerUser(dataToSubmit) {
-//     const request = axios.post(`${USER_SERVER}/register`, dataToSubmit)
-//         .then(response => response.data);
-
-//     return {
-//         type: REGISTER_USER,
-//         payload: request
-//     }
-// }
+export const registerUser = (dataToSubmit) => {
+    return async (dispatch) => {
+        try {
+            const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000);
+            const res = await appClient.post('/users/register', dataToSubmit);
+            if (res.success){
+                dispatch(loginUser({email: dataToSubmit.email, password: dataToSubmit.password}))
+            } else {
+                Alert.alert('Lỗi', 'Lỗi', [{ text: 'Okay' }])
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
 
 
 export const loginUser = (dataToSubmit) => {

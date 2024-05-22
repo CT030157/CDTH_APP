@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 
 import ProductsOverviewScreen, { screenOptions as productOverviewScreenOptions } from '../screens/shop/ProductsOverviewScreen';
+import ProductDetailScreen, { screenOptions as productDetailScreenOptions } from '../screens/shop/ProductDetailScreen';
 import AuthScreen, { screenOptions as authScreenOptions } from '../screens/user/AuthScreen';
 import Colors from '../constants/Colors';
 import * as userActions from '../store/actions/user_actions';
@@ -31,6 +32,11 @@ const ProductsNavigator = () => {
          name='ProductsOverview' 
          component={ProductsOverviewScreen}
          options={productOverviewScreenOptions} 
+      />
+      <ProductsStackNavigator.Screen 
+         name='ProductDetail' 
+         component={ProductDetailScreen} 
+         options={productDetailScreenOptions}
       />
    </ProductsStackNavigator.Navigator>
 }
@@ -63,7 +69,7 @@ export const ShopNavigator = () => {
          options={{
             drawerIcon: props => (
                <Ionicons
-                  name={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+                  name={Platform.OS === 'android' ? 'mcart' : 'ios-cart'}
                   size={23}
                   color={props.color}
                />

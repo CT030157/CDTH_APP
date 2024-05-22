@@ -47,12 +47,28 @@ const AuthScreen = () => {
    const [isSignup, setIsSignup] = useState(false);
    const dispatch = useDispatch();
 
-   const [formState, dispatchFormState] = useReducer(formReducer, {
+   const [formStateLogin, dispatchFormStateLogin] = useReducer(formReducer, {
       inputValues: {
          email: '',
          password: ''
       },
       inputValidities: {
+         email: false,
+         password: false
+      },
+      formIsValid: false
+   });
+
+   const [formStateSignUp, dispatchFormStateSignUp] = useReducer(formReducer, {
+      inputValues: {
+         name: '',
+         lastname: '',
+         email: '',
+         password: ''
+      },
+      inputValidities: {
+         name: false,
+         lastname: false,
          email: false,
          password: false
       },
@@ -68,17 +84,20 @@ const AuthScreen = () => {
    const authHandler = async () => {
       let action;
       if (isSignup) {
-         action = userActions.loginUser(
+         action = userActions.registerUser(
             {
-               email: formState.inputValues.email,
-               password: formState.inputValues.password
+               name: formStateSignUp.inputValues.name,
+               lastname: formStateSignUp.inputValues.lastname,
+               email: formStateSignUp.inputValues.email,
+               password: formStateSignUp.inputValues.password,
+               image: ''
             }
          )
       } else {
          action = userActions.loginUser(
             {
-               email: formState.inputValues.email,
-               password: formState.inputValues.password
+               email: formStateLogin.inputValues.email,
+               password: formStateLogin.inputValues.password
             }
          )
       }
@@ -90,49 +109,110 @@ const AuthScreen = () => {
          setError(err.message);
          setIsLoading(false);
       }
+      setIsLoading(false);
    }
 
-   const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
-      dispatchFormState({
+   const inputChangeHandlerLogin = useCallback((inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormStateLogin({
          type: FORM_INPUT_UPDATE,
          value: inputValue,
          isValid: inputValidity,
          input: inputIdentifier
       });
-   }, [dispatchFormState]);
+   }, [dispatchFormStateLogin]);
+
+   const inputChangeHandlerSignUp = useCallback((inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormStateSignUp({
+         type: FORM_INPUT_UPDATE,
+         value: inputValue,
+         isValid: inputValidity,
+         input: inputIdentifier
+      });
+   }, [dispatchFormStateSignUp]);
 
    return (
-      <KeyboardAvoidingView
-         behavior='padding'
-         keyboardVerticalOffset={50}
+      <View
+         // behavior='padding'
+         // keyboardVerticalOffset={1}
          style={styles.screen}
       >
          <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
             <Card style={styles.authContainer}>
                <ScrollView>
-                  <Input
-                     id='email'
-                     label='E-Mail'
-                     keyboardType='email-address'
-                     required
-                     email
-                     autoCapitalize='none'
-                     errorText='Xin vui lòng nhập email.'
-                     onInputChange={inputChangeHandler}
-                     initialValue=''
-                  />
-                  <Input
-                     id='password'
-                     label='Mật khẩu'
-                     keyboardType='default'
-                     secureTextEntry
-                     required
-                     minLength={5}
-                     autoCapitalize='none'
-                     errorText='Xin vui lòng nhập mật khẩu.'
-                     onInputChange={inputChangeHandler}
-                     initialValue=''
-                  />
+                  {isSignup
+                  ?
+                  <View>
+                     <Input
+                        id='name'
+                        label='Tên'
+                        keyboardType='default'
+                        required
+                        autoCapitalize='none'
+                        errorText='Xin vui lòng nhập tên.'
+                        onInputChange={inputChangeHandlerSignUp}
+                        initialValue=''
+                     />
+                     <Input
+                        id='Họ'
+                        label='Họ'
+                        keyboardType='default'
+                        required
+                        autoCapitalize='none'
+                        errorText='Xin vui lòng nhập họ.'
+                        onInputChange={inputChangeHandlerSignUp}
+                        initialValue=''
+                     />
+                     <Input
+                        id='email'
+                        label='E-Mail'
+                        keyboardType='email-address'
+                        required
+                        email
+                        autoCapitalize='none'
+                        errorText='Xin vui lòng nhập email.'
+                        onInputChange={inputChangeHandlerSignUp}
+                        initialValue=''
+                     />
+                     <Input
+                        id='password'
+                        label='Mật khẩu'
+                        keyboardType='default'
+                        secureTextEntry
+                        required
+                        minLength={5}
+                        autoCapitalize='none'
+                        errorText='Xin vui lòng nhập mật khẩu.'
+                        onInputChange={inputChangeHandlerSignUp}
+                        initialValue=''
+                     />
+                  </View>
+                  :
+                  <View>
+                     <Input
+                        id='email'
+                        label='E-Mail'
+                        keyboardType='email-address'
+                        required
+                        email
+                        autoCapitalize='none'
+                        errorText='Xin vui lòng nhập email.'
+                        onInputChange={inputChangeHandlerLogin}
+                        initialValue=''
+                     />
+                     <Input
+                        id='password'
+                        label='Mật khẩu'
+                        keyboardType='default'
+                        secureTextEntry
+                        required
+                        minLength={5}
+                        autoCapitalize='none'
+                        errorText='Xin vui lòng nhập mật khẩu.'
+                        onInputChange={inputChangeHandlerLogin}
+                        initialValue=''
+                     />
+                  </View>
+                  }
                   <View style={styles.buttonContainer}>
                      {isLoading ? (
                         <ActivityIndicator
@@ -147,19 +227,19 @@ const AuthScreen = () => {
                            />
                         )}
                   </View>
-                  {/* <View style={styles.buttonContainer}>
+                  <View style={styles.buttonContainer}>
                      <Button
-                        title={`Switch to ${isSignup ? 'Đăng nhập' : 'Đăng kí'}`}
+                        title={`Đổi sang ${isSignup ? 'Đăng nhập' : 'Đăng kí'}`}
                         color={Colors.accent}
                         onPress={() => {
                            setIsSignup(prevState => !prevState);
                         }}
                      />
-                  </View> */}
+                  </View>
                </ScrollView>
             </Card>
          </LinearGradient>
-      </KeyboardAvoidingView>
+      </View>
 
    )
 };
@@ -179,8 +259,8 @@ const styles = StyleSheet.create({
    },
    authContainer: {
       width: '80%',
-      maxWidth: 400,
-      maxHeight: 400,
+      maxWidth: 800,
+      maxHeight: 800,
       padding: 20
    },
    buttonContainer: {
