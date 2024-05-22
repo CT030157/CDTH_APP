@@ -21,6 +21,7 @@ const StartupScreen = () => {
          }
          const transformedData = JSON.parse(userData);
          const { token, userId, tokenExp } = transformedData;
+
          const expirationDate = new Date(tokenExp);
 
          if (expirationDate <= new Date() || !token || !userId) {
@@ -28,9 +29,7 @@ const StartupScreen = () => {
             return;
          }
 
-         const expirationTime = expirationDate.getTime() - new Date().getTime();
-
-         // dispatch(userActions.authenticate(userId, token, expirationTime));
+         dispatch(userActions.autoLoginUser(transformedData));
       };
 
       tryLogin()

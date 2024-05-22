@@ -6,11 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 
 import ProductsOverviewScreen, { screenOptions as productOverviewScreenOptions } from '../screens/shop/ProductsOverviewScreen';
-// import ProductDetailScreen, { screenOptions as productDetailScreenOptions } from '../screens/shop/ProductDetailScreen';
-// import CartScreen, { screenOptions as cartScreenOptions } from '../screens/shop/CartScreen';
-// import OrdersScreen, { screenOptions as ordersScreenOptions } from '../screens/shop/OrdersScreen';
-// import UserProductsScreen, { screenOptions as userProductsScreenOptions } from '../screens/user/UserProductsScreen';
-// import EditProductScreen, { screenOptions as editProductScreenOptions } from '../screens/user/EditProductScreen';
 import AuthScreen, { screenOptions as authScreenOptions } from '../screens/user/AuthScreen';
 import Colors from '../constants/Colors';
 import * as userActions from '../store/actions/user_actions';
@@ -37,47 +32,8 @@ const ProductsNavigator = () => {
          component={ProductsOverviewScreen}
          options={productOverviewScreenOptions} 
       />
-      {/* <ProductsStackNavigator.Screen 
-         name='ProductDetail' 
-         component={ProductDetailScreen} 
-         options={productDetailScreenOptions}
-      />
-      <ProductsStackNavigator.Screen 
-         name='Cart' 
-         component={CartScreen} 
-         options={cartScreenOptions}
-      /> */}
    </ProductsStackNavigator.Navigator>
 }
-
-// const OrdersStackNavigator = createStackNavigator();
-
-// export const OrdersNavigator = () => {
-//    return <OrdersStackNavigator.Navigator screenOptions={defaultNavOptions}>
-//       <OrdersStackNavigator.Screen 
-//          name='Orders' 
-//          component={OrdersScreen} 
-//          options={ordersScreenOptions} 
-//       />
-//    </OrdersStackNavigator.Navigator>
-// }
-
-// const AdminStackNavigator = createStackNavigator();
-
-// export const AdminNavigator = () => {
-//    return <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
-//       <AdminStackNavigator.Screen 
-//          name='UserProducts' 
-//          component={UserProductsScreen} 
-//          options={userProductsScreenOptions} 
-//       />
-//       <AdminStackNavigator.Screen 
-//          name='EditProduct' 
-//          component={EditProductScreen}
-//          options={editProductScreenOptions} 
-//       />
-//    </AdminStackNavigator.Navigator>
-// }
 
 const ShopDrawerNavigator = createDrawerNavigator();
 
@@ -90,7 +46,7 @@ export const ShopNavigator = () => {
             <View style={{ flex: 1, paddingTop: 20 }}>
                <SafeAreaView forceIncet={{ top: 'always', horizontal: 'never' }}>
                   <DrawerItemList {...props} />
-                  <Button title='Đăng xuất' color={Colors.primary} onPress={() => {
+                  <Button title='Đăng xuất' color={'#ff7875'} onPress={() => {
                      dispatch(userActions.logoutUser());
                   }} />
                </SafeAreaView>
@@ -114,32 +70,6 @@ export const ShopNavigator = () => {
             )
          }}
       />
-      {/* <ShopDrawerNavigator.Screen
-         name='Orders'
-         component={OrdersNavigator}
-         options={{
-            drawerIcon: props => (
-               <Ionicons
-                  name={Platform.OS === 'android' ? 'md-list' : 'ios-list'}
-                  size={23}
-                  color={props.color}
-               />
-            )
-         }}
-      />
-      <ShopDrawerNavigator.Screen
-         name='Admin'
-         component={AdminNavigator}
-         options={{
-            drawerIcon: props => (
-               <Ionicons
-                  name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
-                  size={23}
-                  color={props.color}
-               />
-            )
-         }}
-      /> */}
    </ShopDrawerNavigator.Navigator>
 }
 

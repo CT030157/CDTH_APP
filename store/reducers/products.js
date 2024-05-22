@@ -1,64 +1,23 @@
-import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, SET_PRODUCTS } from '../actions/products';
-import Product from '../../models/product';
+import { GET_PRODUCTS_REQUEST, GET_PRODUCTS_DONE, GET_PRODUCT_DETAILS_REQUEST, GET_PRODUCT_DETAILS_DONE, PRODUCT_DONE } from '../actions/types';
 
 const initialState = {
-   listProducts: []
+   listProducts: [],
+   detailsProduct: null,
+   isRefreshing: false
 };
 
 export default (state = initialState, action) => {
    switch (action.type) {
-      case SET_PRODUCTS:
-         return {
-            initialState: action.paypload,
-         };
-      // case CREATE_PRODUCT:
-      //    const newProduct = new Product(
-      //       action.productData.id,
-      //       action.productData.ownerId,
-      //       action.productData.title,
-      //       action.productData.imageUrl,
-      //       action.productData.description,
-      //       action.productData.price
-      //    );
-      //    return {
-      //       ...state,
-      //       availableProducts: state.availableProducts.concat(newProduct),
-      //       userProducts: state.userProducts.concat(newProduct)
-      //    }
-      // case UPDATE_PRODUCT:
-      //    const productIndex = state.userProducts.findIndex(
-      //       prod => prod.id === action.pid
-      //    );
-      //    const updatedProduct = new Product(
-      //       action.pid,
-      //       state.userProducts[productIndex].ownerId,
-      //       action.productData.title,
-      //       action.productData.imageUrl,
-      //       action.productData.description,
-      //       state.userProducts[productIndex].price
-      //    );
-      //    const updatedUserProducts = [...state.userProducts];
-      //    updatedUserProducts[productIndex] = updatedProduct;
-      //    const availableProductIndex = state.availableProducts.findIndex(
-      //       prod => prod.id === action.pid
-      //    );
-      //    const updatedAvailableProducts = [...state.availableProducts];
-      //    updatedAvailableProducts[availableProductIndex] = updatedProduct;
-      //    return {
-      //       ...state,
-      //       availableProducts: updatedAvailableProducts,
-      //       userProducts: updatedUserProducts
-      //    };
-      // case DELETE_PRODUCT:
-      //    return {
-      //       ...state,
-      //       userProducts: state.userProducts.filter(
-      //          product => product.id !== action.pid
-      //       ),
-      //       availableProducts: state.availableProducts.filter(
-      //          product => product.id !== action.pid
-      //       )
-      //    };
+      case GET_PRODUCTS_REQUEST:
+         return { ...state, isRefreshing: true}
+      case GET_PRODUCTS_DONE:
+         return { ...state, isRefreshing: false, listProducts: action.payload}
+      case GET_PRODUCT_DETAILS_REQUEST:
+         return { ...state, isRefreshing: true}
+      case GET_PRODUCT_DETAILS_DONE:
+         return { ...state, isRefreshing: false, detailsProduct: action.payload}
+      case PRODUCT_DONE:
+         return { ...state, isRefreshing: false}    
    }
    return state;
 }

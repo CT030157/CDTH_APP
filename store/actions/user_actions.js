@@ -13,6 +13,7 @@ import { createAppClient } from '../../networking'
 import {
     Alert
  } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const setDidTryAL = () => {
@@ -37,13 +38,13 @@ export const loginUser = (dataToSubmit) => {
             const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000, token);
             const res = await appClient.post('/users/login', dataToSubmit);
             if (res.loginSuccess){
+                await AsyncStorage.setItem('userData', JSON.stringify(res));
                 dispatch({
                     type: LOGIN_USER,
                     payload: res
                 })
                 dispatch(auth());
             } else {
-                console.log('2')
                 Alert.alert('', res.message, [{ text: 'Okay' }])
             }
         } catch (error) {
@@ -75,6 +76,7 @@ export function logoutUser() {
             const { token } = getState().user;
             const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000, token);
             const res = await appClient.get('/users/logout');
+            await AsyncStorage.clear();
             dispatch({
                 type: LOGOUT_USER,
             })
@@ -84,6 +86,20 @@ export function logoutUser() {
     }
 }
 
+
+export const autoLoginUser = (res) => {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({
+                type: LOGIN_USER,
+                payload: res
+            })
+            dispatch(auth());
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
 
 // export function addToCart(_id) {
 //     const request = axios.get(`${USER_SERVER}/addToCart?productId=${_id}`)

@@ -20,6 +20,10 @@ const ProductItem = props => {
       TouchableCmp = TouchableNativeFeedback;
    }
 
+   const addDotToNumber = (num) => {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+   }
+
    return (
       <Card style={styles.product}>
          <View style={styles.touchable}>
@@ -30,7 +34,7 @@ const ProductItem = props => {
                   </View>
                   <View style={styles.details}>
                      <Text style={styles.title}>{props.title}</Text>
-                     <Text style={styles.price}>${props.price.toFixed(2)}</Text>
+                     <Text style={styles.price}>{addDotToNumber(props.price)}.000 VNĐ</Text>
                   </View>
                   <View style={styles.actions}>
                      {props.children}
