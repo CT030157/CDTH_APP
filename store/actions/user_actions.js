@@ -107,74 +107,95 @@ export const autoLoginUser = (res) => {
     }
 }
 
-// export function addToCart(_id) {
-//     const request = axios.get(`${USER_SERVER}/addToCart?productId=${_id}`)
-//         .then(response => response.data);
-
-//     return {
-//         type: ADD_TO_CART_USER,
-//         payload: request
-//     }
-// }
-
-
-
-
-
-// export function getCartItems(cartItems, userCart) {
-//     const request = axios.get(`${PRODUCT_SERVER}/products_by_id?id=${cartItems}&type=array`)
-//         .then(response => {
-//             userCart.forEach(cartItem => {
-//                 response.data.forEach((productDetail, i) => {
-//                     if (cartItem.id === productDetail._id) {
-//                         response.data[i].quantity = cartItem.quantity;
-//                     }
-//                 })
-//             })
-
-//             return response.data;
-//         });
-
-//     return {
-//         type: GET_CART_ITEMS_USER,
-//         payload: request
-//     }
-// }
+export function addToCart(_id, quantity, size) {
+    return async (dispatch, getState) => {
+        try {
+            const { token } = getState().user;
+            const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000, token);
+            const res = await appClient.get(`/users/addToCart?productId=${_id}&quantity=${quantity}&size=${size}`);
+            dispatch({
+                type: ADD_TO_CART_USER,
+                payload: res
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
 
 
 
 
-// export function removeCartItem(id) {
-//     const request = axios.get(`/api/users/removeFromCart?_id=${id}`)
-//         .then(response => {
 
-//             response.data.cart.forEach(item => {
-//                 response.data.cartDetail.forEach((k, i) => {
-//                     if (item.id === k._id) {
-//                         response.data.cartDetail[i].quantity = item.quantity
-//                     }
-//                 })
-//             })
-//             return response.data;
-//         });
+export function getCartItems(cartItems, userCart) {
+    return async (dispatch, getState) => {
+        try {
+            const { token } = getState().user;
+            const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000, token);
+            let res = await appClient.get(`/products/products_by_id?id=${cartItems}&type=array`);
+            userCart.forEach(cartItem => {
+                res.forEach((productDetail, i) => {
+                    if (cartItem.product_id === productDetail._id) {
+                        cartItem.title = productDetail.title;
+                        cartItem.images = productDetail.images;
+                        cartItem.price = productDetail.price;
+                    }
+                })
+            })
+            dispatch({
+                type: GET_CART_ITEMS_USER,
+                payload: userCart
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
 
-//     return {
-//         type: REMOVE_CART_ITEM_USER,
-//         payload: request
-//     }
-// }
 
 
-// export function onSuccessBuy(data) {
 
-//     const request = axios.post(`${USER_SERVER}/successBuy`, data)
-//         .then(response => response.data);
+export function removeCartItem(id) {
+    return async (dispatch, getState) => {
+        try {
+            const { token } = getState().user;
+            const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000, token);
+            let res = await appClient.get(`/users/removeFromCart?_id=${id}`).then(response => {
+                response.cart.forEach(item => {
+                    response.cartDetail.forEach((k, i) => {
+                        if (item.id === k._id) {
+                            response.cartDetail[i].quantity = item.quantity
+                        }
+                    })
+                })
+                return response
+            });
+            dispatch({
+                type: REMOVE_CART_ITEM_USER,
+                payload: res
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
 
-//     return {
-//         type: ON_SUCCESS_BUY_USER,
-//         payload: request
-//     }
-// }
+
+export function onSuccessBuy(data) {
+    return async (dispatch, getState) => {
+        try {
+            const { token } = getState().user;
+            const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000, token);
+            let res = await appClient.post(`/users/successBuy`, data);
+            dispatch({
+                type: ON_SUCCESS_BUY_USER,
+                payload: res
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
 
 
 

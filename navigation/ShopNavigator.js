@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import ProductsOverviewScreen, { screenOptions as productOverviewScreenOptions } from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen, { screenOptions as productDetailScreenOptions } from '../screens/shop/ProductDetailScreen';
 import AuthScreen, { screenOptions as authScreenOptions } from '../screens/user/AuthScreen';
+import CartScreen, {screenOptions as cartScreenOptions} from '../screens/shop/CartScreen';
+import OrdersScreen, { screenOptions as ordersScreenOptions } from '../screens/shop/OrdersScreen';
 import Colors from '../constants/Colors';
 import * as userActions from '../store/actions/user_actions';
 
@@ -38,7 +40,24 @@ const ProductsNavigator = () => {
          component={ProductDetailScreen} 
          options={productDetailScreenOptions}
       />
+      <ProductsStackNavigator.Screen 
+         name='Cart' 
+         component={CartScreen} 
+         options={cartScreenOptions}
+      />
    </ProductsStackNavigator.Navigator>
+}
+
+const OrdersStackNavigator = createStackNavigator();
+
+export const OrdersNavigator = () => {
+   return <OrdersStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <OrdersStackNavigator.Screen 
+         name='Orders' 
+         component={OrdersScreen} 
+         options={ordersScreenOptions} 
+      />
+   </OrdersStackNavigator.Navigator>
 }
 
 const ShopDrawerNavigator = createDrawerNavigator();
@@ -69,7 +88,21 @@ export const ShopNavigator = () => {
          options={{
             drawerIcon: props => (
                <Ionicons
-                  name={Platform.OS === 'android' ? 'mcart' : 'ios-cart'}
+                  name={Platform.OS === 'android' ? 'md-list' : 'ios-list'}
+                  size={23}
+                  color={props.color}
+               />
+            )
+         }}
+      />
+
+      <ShopDrawerNavigator.Screen
+         name='Lịch sử đơn hàng'
+         component={OrdersNavigator}
+         options={{
+            drawerIcon: props => (
+               <Ionicons
+                  name={Platform.OS === 'android' ? 'md-list' : 'ios-list'}
                   size={23}
                   color={props.color}
                />

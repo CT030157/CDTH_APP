@@ -1,68 +1,134 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import moment from 'moment';
 
-import CartItem from './CartItem';
-import Colors from '../../constants/Colors';
+const addDotToNumber = (num) => {
+   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
-import Card from '../UI/Card';
+const styledStatus = (status) =>{
+   switch (status) {
+      case 'Chờ duyệt' : {
+         return (<View
+               style={{
+                  borderWidth: 1,
+                  borderColor: 'blue',
+                  padding: 5,
+                  borderRadius: 5,
+                  marginHorizontal: 5,
+                  backgroundColor: 'blue'
+               }}
+            >
+               <Text style={{ color: 'white', fontWeight: 'bold'}}>Chờ duyệt</Text>
+            </View>);
+            break;
+      }
+
+      case 'Đã duyệt' : {
+         return (<View
+               style={{
+                  borderWidth: 1,
+                  borderColor: 'green',
+                  padding: 5,
+                  borderRadius: 5,
+                  marginHorizontal: 5,
+                  backgroundColor: 'green'
+               }}
+            >
+               <Text style={{ color: 'white', fontWeight: 'bold'}}>Đã duyệt</Text>
+            </View>);
+            break;
+      }
+
+      case 'Đã hủy' : {
+         return (<View
+               style={{
+                  borderWidth: 1,
+                  borderColor: 'red',
+                  padding: 5,
+                  borderRadius: 5,
+                  marginHorizontal: 5,
+                  backgroundColor: 'red'
+               }}
+            >
+               <Text style={{ color: 'white', fontWeight: 'bold'}}>Đã hủy</Text>
+            </View>);
+            break;
+      }
+
+      default: {
+         return (<View
+               style={{
+                  borderWidth: 1,
+                  borderColor: 'blue',
+                  padding: 10,
+                  borderRadius: 5,
+                  marginHorizontal: 5,
+                  backgroundColor: 'blue'
+               }}
+            >
+               <Text style={{ color: 'white', fontWeight: 'bold'}}>Chờ duyệt</Text>
+            </View>);
+            break;
+      }
+
+   }
+}
 
 const OrderItem = props => {
-   const [showDetails, setShowDetails] = useState(false);
-
    return (
-      <Card style={styles.orderItem}>
-         <View style={styles.summary}>
-            <Text style={styles.totalAmount}>${props.amount.toFixed(2)}</Text>
-            <Text style={styles.date}>{props.date}</Text>
-         </View>
-         <Button
-            color={Colors.primary}
-            title={showDetails ? 'Hide Details' : 'Show detail'}
-            onPress={() => {
-               setShowDetails(prevState => !prevState);
-            }}
-         />
-         {showDetails && (
-            <View style={styles.detailItems}>
-               {props.items.map(cartItem => (
-                  <CartItem
-                     key={cartItem.productId}
-                     quantity={cartItem.quantity}
-                     amount={cartItem.sum}
-                     title={cartItem.productTitle}
-                  />
-               ))}
+      <View style={styles.cartItem}>
+         <View style={styles.itemDetails}>
+         <Text style={styles.quantity}>{props.data.quantity}x</Text>
+         <Text style={styles.title}>{props.data.name} {props.data.size ? `cỡ ${props.data.size}` : ''}</Text>
+         <Text style={styles.price}>{addDotToNumber(props.data.price ?? 0)} VNĐ</Text>
+         <Text style={styles.title}>Ngày mua: {moment(props.data.dateOfPurchase).format('DD/mm/yyyy')}</Text>
+         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+            <Text>Trạng thái:</Text>
+            {styledStatus(props.data.status)}
             </View>
-         )}
-      </Card>
+         </View>
+      </View>
    )
 };
 
 const styles = StyleSheet.create({
-   orderItem: {      
-      margin: 20,
+   cartItem: {
       padding: 10,
-      alignItems: 'center'
-   },
-   summary: {
+      backgroundColor: 'white',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      marginHorizontal: 10,
       alignItems: 'center',
-      width: '100%',
-      marginBottom: 15
-   },
-   totalAmount: {
+      borderBottomWidth: 1,
+      borderBottomColor: '#ccc'
+    },
+    itemDetails: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      flex: 1,
+      paddingLeft: 10
+    },
+    image: {
+      width: 50,
+      height: 50,
+      backgroundColor: '#ccc'
+    },
+    quantity: {
+      fontFamily: 'open-sans',
+      color: '#888',
+      fontSize: 16
+    },
+    title: {
       fontFamily: 'open-sans-bold',
       fontSize: 16
-   },
-   date: {
+    },
+    price: {
       fontFamily: 'open-sans',
       fontSize: 16,
-      color: '#888'
-   },
-   detailItems: {
-      width: '100%'
-   }
+      color: '#888',
+    },
 });
 
 export default OrderItem;

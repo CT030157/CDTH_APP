@@ -12,6 +12,7 @@ import {
 
 const initialState = {
     userData: {},
+    cartDetail: [],
     loginSuccess: false,
     token: null,
     didTryAutoLogin: false
@@ -29,7 +30,7 @@ export default (state = initialState, action) => {
        case AUTH_USER:
            return { ...state, userData: action.payload }
        case LOGOUT_USER:
-           return { ...state, didTryAutoLogin: true, userData: {}, token: null }
+           return { ...state, didTryAutoLogin: true, userData: {}, token: null, cartDetail: [] }
        case ADD_TO_CART_USER:
            return {
                ...state, userData: {
@@ -40,15 +41,18 @@ export default (state = initialState, action) => {
            
        case GET_CART_ITEMS_USER:
            return {
-               ...state, cartDetail: action.payload
+               ...state, userData: {
+                ...state.userData,
+                cartDetail: action.payload
+            }
            }
        case REMOVE_CART_ITEM_USER:
            return {
                ...state,
-               cartDetail: action.payload.cartDetail,
                userData: {
                    ...state.userData,
-                   cart: action.payload.cart
+                   cart: action.payload.cart,
+                   cartDetail: action.payload.cartDetail,
                }
 
            }
@@ -57,9 +61,9 @@ export default (state = initialState, action) => {
                ...state,
                userData: {
                    ...state.userData,
-                   cart: action.payload.cart
+                   cart: action.payload.cart,
+                   cartDetail: action.payload.cartDetail
                },
-               cartDetail: action.payload.cartDetail
            }
 
        default:

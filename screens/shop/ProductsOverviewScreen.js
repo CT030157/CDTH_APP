@@ -6,10 +6,13 @@ import {
    StyleSheet,
    FlatList,
    Platform,
-   ActivityIndicator
+   ActivityIndicator,
+   ScrollView,
+   TextInput
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
 
 import ProductItem from '../../components/shop/ProductItem';
 // import * as cartActions from '../../store/actions/cart';
@@ -19,18 +22,22 @@ import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen = props => {
    const products = useSelector(state => state.products.listProducts);
+   const userData = useSelector(state => state.user.userData);
    const [isLoading, setIsLoading] = useState(false);
    const [isRefreshing, setIsRefreshing] = useState(false);
    const [error, setError] = useState();
+   const [text, setText] = useState('');
    const dispatch = useDispatch();
 
    const loadProducts = useCallback(async () => {
       setError(null);
       setIsRefreshing(true);
-      try {
-         await dispatch(productsActions.getProducts());
-      } catch (err) {
-         setError(err.message)
+      if (userData._id){
+         try {
+            await dispatch(productsActions.getProducts(userData._id));
+         } catch (err) {
+            setError(err.message)
+         }
       }
       setIsRefreshing(false);
    }, [dispatch, setIsLoading, setError]);
@@ -60,6 +67,13 @@ const ProductsOverviewScreen = props => {
       });
    };
 
+   const filterData = (data) => {
+      if (text.trim() !== ''){
+         data = data.filter(item =>item.title.toLowerCase().includes(text.toLowerCase()));
+      }
+      return data;
+   }
+
    if (error) {
       return (
          <View style={styles.centered}>
@@ -80,44 +94,39 @@ const ProductsOverviewScreen = props => {
    if (!isLoading && products.length === 0) {
       return (
          <View style={styles.centered}>
-            <Text>No products found</Text>
+            <Text>Chưa có sản phẩm</Text>
          </View>
       )
    }
 
    return (
-      <FlatList
-         onRefresh={loadProducts}
-         refreshing={isRefreshing}
-         data={products}
-         keyExtractor={item => item._id}
-         renderItem={itemData =>
-            <ProductItem
-               image={itemData.item.images[0]}
-               title={itemData.item.title}
-               price={itemData.item.price}
-               onSelect={() => {
-                  selectItemHandler(itemData.item._id, itemData.item.title)
-                  // console.log(itemData)
-               }}
-            >
-               {/* <Button
-                  color={Colors.primary}
-                  title='View Details'
-                  onPress={() => {
-                     selectItemHandler(itemData.item.id, itemData.item.title)
+      <ScrollView>
+         <TextInput
+            style={styles.input}
+            onChangeText={setText}
+            value={text}
+            placeholder='Tìm kiếm sản phẩm'/>
+         <FlatList
+            key={'_'}
+            nestedScrollEnabled={false}
+            onRefresh={loadProducts}
+            refreshing={isRefreshing}
+            data={filterData(products)}
+            keyExtractor={item => item._id}
+            numColumns={2}
+            renderItem={itemData =>
+               <ProductItem
+                  images={itemData.item.images}
+                  title={itemData.item.title}
+                  price={itemData.item.price}
+                  onSelect={() => {
+                     selectItemHandler(itemData.item._id, itemData.item.title)
                   }}
-               /> */}
-               {/* <Button
-                  color={Colors.primary}
-                  title='To Cart'
-                  onPress={() => {
-                     dispatch(cartActions.addToCart(itemData.item))
-                  }}
-               /> */}
-            </ProductItem>
-         }
-      />
+               >
+               </ProductItem>
+            }
+         />
+      </ScrollView>
    )
 };
 
@@ -154,7 +163,15 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center'
-   }
+   },
+   input: {
+      height: 40,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
+      borderColor: '#888',
+      borderRadius: 2
+    },
 })
 
 export default ProductsOverviewScreen;

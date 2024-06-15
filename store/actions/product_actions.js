@@ -11,15 +11,15 @@ import {
  } from 'react-native';
 
 
-export const getProducts = (filter = {}) => {
+export const getProducts = (id) => {
     return async (dispatch, getState) => {
         try {
             dispatch({
                 type: GET_PRODUCTS_REQUEST,
             })
-            const { token } = getState().user;
+            const { token, userData } = getState().user;
             const appClient = createAppClient('https://cdth-web.vercel.app/api/', 15000, token);
-            const res = await appClient.post('/products/getProducts', filter);
+            const res = await appClient.post('/products/getProducts', {writer: id});
             if (res.success){
                 dispatch({
                     type: GET_PRODUCTS_DONE,
