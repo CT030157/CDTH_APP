@@ -45,8 +45,9 @@ const ProductDetailScreen = props => {
       );
    }
 
-   const addToCartHandler = () => {
-      dispatch(userActions.addToCart(productId, quantity, size));
+   const addToCartHandler = async () => {
+      await dispatch(userActions.addToCart(productId, quantity, size));
+      props.navigation.navigate('Cart');
    }
 
    return (

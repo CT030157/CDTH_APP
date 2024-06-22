@@ -114,6 +114,7 @@ const ProductsOverviewScreen = props => {
             data={filterData(products)}
             keyExtractor={item => item._id}
             numColumns={2}
+            initialNumToRender={20}
             renderItem={itemData =>
                <ProductItem
                   images={itemData.item.images}
